@@ -1,5 +1,6 @@
 import pymysql
-#database connection
+
+# database connection
 connection = pymysql.connect(host="localhost", user="root", passwd="", database="youtube")
 cursor = connection.cursor()
 # Query for creating table
@@ -22,6 +23,7 @@ video = """CREATE TABLE video (
                             thumbnail varchar(30),
                             views int(15) NOT NULL,
                             likes int(15) NOT NULL,
+                            dislikes int(15) NOT NULL,
                             PRIMARY KEY (videoId),
                             FOREIGN KEY (videoId )
                                 REFERENCES comment(videoId)
@@ -64,17 +66,42 @@ likes = """CREATE TABLE likes (
      videoId int(30) NOT NULL
 )"""
 
+dislikes = """CREATE TABLE dislikes (
+     userId int(15) NOT NULL,
+     videoId int(30) NOT NULL
+)"""
+
 joinChannel = """CREATE TABLE joinChannel(
         userId int(15) NOT NULL,
         channelId int(15) NOT NULL
 )"""
 
 playlist = """CREATE TABLE playlist(
+         playlistId int(15) NOT NULL AUTO_INCREMENT,
+         playlistName varchar(30) NOT NULL,
          userId int(15) NOT NULL,
-         videoId int(30) NOT NULL,
-         playlistId int(15) NOT NULL,
-         playlistName varchar(30) NOT NULL
+         PRIMARY KEY (playlistId)
 )"""
+
+playlist_video = """CREATE TABLE playlist_video(
+         playlistId int(15) NOT NULL,
+         videoId int(15) NOT NULL
+)"""
+
+insert_video = """INSERT INTO `video` (`videoId`, `videoName`, `vCaption`, `time`, `data`, `thumbnail`, `views`, `likes`, `dislikes`) VALUES
+(1, 'video 1', 'video1', '30', '11/6/2020', NULL, 0, 0, 0),
+(2, 'video 2', 'video2', '32', '11/6/2020', NULL, 0, 0, 0),
+(3, 'video 3', 'video3', '35', '11/6/2020', NULL, 0, 0, 0);
+"""
+insert_user = """INSERT INTO `user` (`username`, `userId`, `pass`, `email`, `date`, `profileImage`) VALUES
+('mahdi', 1, '3627909a29c3138', 'mahdi@gmail.com', '1625264703.4390085', NULL),
+('mobina', 2, '3627909a29c3138', 'mobina@gmail.com', '1625264729.4497058', NULL);
+"""
+insert_pl = """
+INSERT INTO `playlist` (`playlistId`, `playlistName`, `userId`) VALUES
+(1, 'watch later', 1),
+(2, 'watch later', 2);
+"""
 
 cursor.execute(user)
 cursor.execute(video)
@@ -82,6 +109,11 @@ cursor.execute(channel)
 cursor.execute(shareChannel)
 cursor.execute(view)
 cursor.execute(likes)
+cursor.execute(dislikes)
 cursor.execute(joinChannel)
 cursor.execute(playlist)
+cursor.execute(playlist_video)
+cursor.execute(insert_video)
+cursor.execute(insert_user)
+cursor.execute(insert_pl)
 connection.close()
