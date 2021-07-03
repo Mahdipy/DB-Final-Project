@@ -174,6 +174,8 @@ class Video:
                 self.add_like(video_id[index])
             if x == '2':
                 self.add_dislike(video_id[index])
+            if x == '3':
+                self.showComment(video_id[index])
             if x == '4':
                 self.add_video_to_playlist(video_id[index])
 
@@ -233,11 +235,28 @@ class Video:
         result = self.cursor.fetchone()
         return result
 
-    # delet comment
-    def deleteComment(self):
+    def showComment(self, videoId):
+        self.cursor.execute("SELECT * from `comment` where videoId=%s ", (videoId))
+        res = self.cursor.fetchone()
+        print('----------------------------\n          Comments\n----------------------------')
+        while res:
+            print('-----------------------------------------------------------------')
+            if res[1] == self.userId:
+                print(f'{res[0]}) {res[3]} (you can delete this comment)')
+            else:
+                print(f'{res[0]}) {res[3]}')
+            print('-----------------------------------------------------------------')
+            res = self.cursor.fetchone()
 
-        commentId = input("which comment id you want to delete?")
-        self.cursor.execute("DELETE FROM `comment` where `commentId`=%s and `userId`=%s", (commentId, self.userId))
+        x = input("0: Back \n1: Delete Comment \n2: Add Comment\n")
+        if x == '2':
+            com = input('Comment: ')
+            self.cursor.execute("INSERT INTO `comment` (`userId`, `videoId`, `comment`) VALUES (%s, %s , %s)",
+                                (self.userId, videoId, com))
+        elif x == '1':
+            id = input("Enter index of the commend you want to delete: ")
+            self.cursor.execute("DELETE FROM `comment` where `commentId`=%s and `userId`=%s", (id, self.userId))
+        self.connection.commit()
 
     # ---------------------chnnnel------------------------------------------------------------------------------
     def new_channel(self):

@@ -54,15 +54,15 @@ view = """CREATE TABLE view(
 )"""
 
 comment = """CREATE TABLE comment (
+       commentId int(15) NOT NULL AUTO_INCREMENT,
        userId int(15) NOT NULL,
        videoId int(30) NOT NULL,
        comment text(50) NOT NULL,
-       commentId int(15) NOT NULL
-
+       PRIMARY KEY (commentId)
 )"""
 
 commentOnComment = """CREATE TABLE commentOnComment  (
-       parentCom int(15) NOT NULL,
+       parentId int(15) NOT NULL,
        childCom int(15) NOT NULL,
        videoId int(30) NOT NULL
 
@@ -123,4 +123,6 @@ cursor.execute(playlist_video)
 cursor.execute(insert_video)
 cursor.execute(insert_user)
 cursor.execute(insert_pl)
+cursor.execute(comment)
+cursor.execute(commentOnComment)
 connection.close()
