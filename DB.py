@@ -17,9 +17,10 @@ user = """CREATE TABLE user (
 video = """CREATE TABLE video (
                             videoId int(15) NOT NULL AUTO_INCREMENT,
                             videoName varchar(30)  NOT NULL,
+                            StorageId varchar (20) UNIQUE,
                             vCaption text(50) NOT NULL,
                             time varchar(30)  NOT NULL,
-                            data varchar(30)  NOT NULL,
+                            date varchar(30)  NOT NULL,
                             thumbnail varchar(30),
                             views int(15) NOT NULL,
                             likes int(15) NOT NULL,
@@ -88,10 +89,10 @@ playlist_video = """CREATE TABLE playlist_video(
          videoId int(15) NOT NULL
 )"""
 
-insert_video = """INSERT INTO `video` (`videoId`, `videoName`, `vCaption`, `time`, `data`, `thumbnail`, `views`, `likes`, `dislikes`) VALUES
-(1, 'video 1', 'video1', '30', '11/6/2020', NULL, 0, 0, 0),
-(2, 'video 2', 'video2', '32', '11/6/2020', NULL, 0, 0, 0),
-(3, 'video 3', 'video3', '35', '11/6/2020', NULL, 0, 0, 0);
+insert_video = """INSERT INTO `video` (`videoId`, `videoName`,`StorageId`, `vCaption`, `time`, `date`, `thumbnail`, `views`, `likes`, `dislikes`) VALUES
+(1, 'video 1','1' , 'video1', '30', '11/6/2020', NULL, 0, 0, 0),
+(2, 'video 2', '2', 'video2', '32', '11/6/2020', NULL, 0, 0, 0),
+(3, 'video 3', '3','video3', '35', '11/6/2020', NULL, 0, 0, 0);
 """
 insert_user = """INSERT INTO `user` (`username`, `userId`, `pass`, `email`, `date`, `profileImage`) VALUES
 ('mahdi', 1, '3627909a29c3138', 'mahdi@gmail.com', '1625264703.4390085', NULL),
