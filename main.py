@@ -1,5 +1,5 @@
 import pymysql
-import time
+import datetime
 import hashlib, uuid
 import Video
 import Print
@@ -33,7 +33,7 @@ class Main:
             email = input("Enter Email: ")
         hashed_password = hashlib.sha512((pas).encode('utf-8')).hexdigest()
         self.cursor.execute("INSERT INTO `user` (`username`, `pass`, `email`, `date`) VALUES (%s, %s, %s, %s)",
-                            (username, hashed_password[:15], email, time.time()))
+                            (username, hashed_password[:15], email, datetime.datetime.now()))
         self.connection.commit()
         sql = "SELECT * FROM `user` WHERE `username`=%s"
         self.cursor.execute(sql, (username,))

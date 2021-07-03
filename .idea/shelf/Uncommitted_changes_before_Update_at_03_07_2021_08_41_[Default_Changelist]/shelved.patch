@@ -1,0 +1,61 @@
+Index: DB.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import pymysql\r\n#database connection\r\nconnection = pymysql.connect(host=\"localhost\", user=\"root\", passwd=\"\", database=\"youtube\")\r\ncursor = connection.cursor()\r\n# Query for creating table\r\nuser = \"\"\"CREATE TABLE user (\r\n                            username varchar(30)  NOT NULL,\r\n                            userId int(15) NOT NULL AUTO_INCREMENT,\r\n                            pass varchar(15)  NOT NULL,\r\n                            email varchar(30)  NOT NULL,\r\n                            date varchar(30) ,\r\n                            profileImage varchar(30),\r\n                            PRIMARY KEY (userId)\r\n)\"\"\"\r\n\r\nvideo = \"\"\"CREATE TABLE video (\r\n                            videoId int(15) NOT NULL AUTO_INCREMENT,\r\n                            videoName varchar(30)  NOT NULL,\r\n                            vCaption text(50) NOT NULL,\r\n                            time varchar(30)  NOT NULL,\r\n                            data varchar(30)  NOT NULL,\r\n                            thumbnail varchar(30),\r\n                            views int(15) NOT NULL,\r\n                            likes int(15) NOT NULL,\r\n                            PRIMARY KEY (videoId),\r\n                            FOREIGN KEY (videoId )\r\n                                REFERENCES comment(videoId)\r\n                                ON DELETE CASCADE\r\n)\"\"\"\r\n\r\nchannel = \"\"\"CREATE TABLE channel (\r\n    channelId   int(15) NOT NULL AUTO_INCREMENT,\r\n    userId      int(15) NOT NULL,\r\n    channelName varchar(30) NOT NULL,\r\n    date        varchar(30) NOT NULL,\r\n    chCaption   text(50) NOT NULL,\r\n    PRIMARY KEY (channelId),\r\n    FOREIGN KEY (channelId )\r\n        REFERENCES video(commentId)\r\n        ON DELETE CASCADE\r\n)\"\"\"\r\n\r\nshareChannel = \"\"\"CREATE TABLE shareChannel(\r\n     userId  int(15) NOT NULL,\r\n     videoId int(15) NOT NULL,\r\n     channelId int(15) NOT NULL\r\n)\"\"\"\r\n\r\nview = \"\"\"CREATE TABLE view(\r\n     userId  int(15) NOT NULL,\r\n     videoId int(15) NOT NULL\r\n)\"\"\"\r\n\r\ncomment = \"\"\"CREATE TABLE comment (\r\n       userId int(15) NOT NULL,\r\n       videoId int(30) NOT NULL,\r\n       comment text(50) NOT NULL,\r\n       commentId int(15) NOT NULL\r\n\r\n)\"\"\"\r\n\r\nlikes = \"\"\"CREATE TABLE likes (\r\n     userId int(15) NOT NULL,\r\n     videoId int(30) NOT NULL\r\n)\"\"\"\r\n\r\njoinChannel = \"\"\"CREATE TABLE joinChannel(\r\n        userId int(15) NOT NULL,\r\n        channelId int(15) NOT NULL\r\n)\"\"\"\r\n\r\nplaylist = \"\"\"CREATE TABLE playlist(\r\n         userId int(15) NOT NULL,\r\n         videoId int(30) NOT NULL,\r\n         playlistId int(15) NOT NULL,\r\n         playlistName varchar(30) NOT NULL\r\n)\"\"\"\r\n\r\ncursor.execute(user)\r\ncursor.execute(video)\r\ncursor.execute(channel)\r\ncursor.execute(shareChannel)\r\ncursor.execute(view)\r\ncursor.execute(likes)\r\ncursor.execute(joinChannel)\r\ncursor.execute(playlist)\r\nconnection.close()\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/DB.py b/DB.py
+--- a/DB.py	(revision edfd96059273c54ade2e95172b4f6918351e8b3f)
++++ b/DB.py	(date 1625251716508)
+@@ -15,13 +15,14 @@
+ 
+ video = """CREATE TABLE video (
+                             videoId int(15) NOT NULL AUTO_INCREMENT,
++                            userId int(15) NOT NULL,
+                             videoName varchar(30)  NOT NULL,
+                             vCaption text(50) NOT NULL,
+-                            time varchar(30)  NOT NULL,
+-                            data varchar(30)  NOT NULL,
++                            time varchar(30) NOT NULL ,
++                            data varchar(30) NOT NULL ,
+                             thumbnail varchar(30),
+-                            views int(15) NOT NULL,
+-                            likes int(15) NOT NULL,
++                            views int(15) ,
++                            likes int(15) ,
+                             PRIMARY KEY (videoId),
+                             FOREIGN KEY (videoId )
+                                 REFERENCES comment(videoId)
+Index: main.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import pymysql\r\nimport time\r\nimport hashlib, uuid\r\n\r\n\r\n# database connection\r\n\r\n\r\nclass Main:\r\n    def __init__(self):\r\n        self.connection = pymysql.connect(host=\"localhost\", user=\"root\", passwd=\"\", database=\"youtube\")\r\n        self.cursor = self.connection.cursor()\r\n\r\n    def signup(self):\r\n        username = ''\r\n        pas = ''\r\n        email = ''\r\n        z = True\r\n        while (username == '') | z:\r\n            username = input(\"Enter Username: \")\r\n            self.cursor.execute(\"SELECT `username` FROM `user` where `username`=%s\", (username,))\r\n            result = self.cursor.fetchone()\r\n            if result:\r\n                print('Username is already taken!')\r\n            else:\r\n                break\r\n\r\n        while pas == '':\r\n            pas = input(\"Enter Password: \")\r\n\r\n        while email == '':\r\n            email = input(\"Enter Email: \")\r\n        hashed_password = hashlib.sha512((pas).encode('utf-8')).hexdigest()\r\n        self.cursor.execute(\"INSERT INTO `user` (`username`, `pass`, `email`, `date`) VALUES (%s, %s, %s, %s)\",\r\n                            (username, hashed_password[:15], email, time.time()))\r\n\r\n        self.connection.commit()\r\n\r\n    def main(self):\r\n        x = input('Welcome!\\n1)Login\\n2)Sign Up\\n')\r\n        if x == '1':\r\n            self.login()\r\n        elif x == '2':\r\n            self.signup()\r\n\r\n    def login(self):\r\n        name = input('Username: ')\r\n        password = input('Password: ')\r\n        hashed_password = hashlib.sha512((password).encode('utf-8')).hexdigest()\r\n        sql = \"SELECT * FROM `user` WHERE `username`=%s and `pass`=%s\"\r\n        self.cursor.execute(sql, (name, hashed_password[:15]))\r\n        result = self.cursor.fetchone()\r\n        if result:\r\n            print(f'Welcome {name}!')\r\n            while True:\r\n                z = input('enter your code: ')\r\n\r\n\r\nx = Main()\r\nx.main()\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/main.py b/main.py
+--- a/main.py	(revision edfd96059273c54ade2e95172b4f6918351e8b3f)
++++ b/main.py	(date 1625252216872)
+@@ -1,3 +1,5 @@
++import datetime
++
+ import pymysql
+ import time
+ import hashlib, uuid
+@@ -54,7 +56,15 @@
+             print(f'Welcome {name}!')
+             while True:
+                 z = input('enter your code: ')
++        return name
+ 
++    def addvideo(self):
++        name = input("Enter your video name")
++        Caption = input("Enter your Caption")
++        thumbnail = input("Enter your thumbnail")
++        self.cursor.execute("INSERT INTO `video` (`videoName`, `vCaption`,`userId`,`time`,`date`,`thumbnail`) "
++                            "VALUES (%s, %s, %s, %s,%s,%s)",
++                            (name,Caption, time.time(),datetime.date,thumbnail))
+ 
+ x = Main()
+ x.main()
