@@ -398,7 +398,7 @@ class Video:
         x = input('1: video \n2: channel \n3: playlist\n')
         name = input("Enter search word: ")
         if x == '1':
-            sql = "SELECT * FROM `video` where `videoName` like %s%"
+            sql = "SELECT * FROM `video` where `videoName` = `%%s%`"
             self.cursor.execute(sql, (name,))
             videoname = self.cursor.fetchone()
             while videoname:
@@ -406,17 +406,19 @@ class Video:
                 videoname = self.cursor.fetchone()
 
         if x == '2':
-            sql = "SELECT * FROM `channel` where `channelName` like %s%"
-            self.cursor.execute(sql, (name,))
+            sql = "SELECT * FROM `channel` where `channelName` = `%%s%`"
+            self.cursor.execute(sql, (name))
             chname = self.cursor.fetchone()
             while chname:
                 Print.print_success("channel id : " + chname[0] + " channel name: " + chname[2])
                 chname = self.cursor.fetchone()
 
         if x == '3':
-            sql = "SELECT * FROM `playlist` where `playlistName` like %s%"
+            sql = "SELECT * FROM `playlist` where `playlistName` = `%%s%`"
             self.cursor.execute(sql, (name,))
             pname = self.cursor.fetchone()
             while pname:
                 Print.print_success("play list id : " + pname[0] + " play list name: " + pname[2])
                 pname = self.cursor.fetchone()
+
+
