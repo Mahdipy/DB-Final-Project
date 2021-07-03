@@ -62,6 +62,13 @@ comment = """CREATE TABLE comment (
 
 )"""
 
+commentOnComment = """CREATE TABLE commentOnComment  (
+       parentCom int(15) NOT NULL,
+       childCom int(15) NOT NULL,
+       videoId int(30) NOT NULL
+
+)"""
+
 likes = """CREATE TABLE likes (
      userId int(15) NOT NULL,
      videoId int(30) NOT NULL

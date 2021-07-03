@@ -230,6 +230,13 @@ class Video:
         result = self.cursor.fetchone()
         return result
 
+# delet comment
+    def deleteComment(self):
+
+        commentId = input("which comment id you want to delete?")
+        self.cursor.execute("DELETE FROM `comment` where `commentId`=%s and `userId`=%s", (commentId, self.userId))
+
+
     # ---------------------chnnnel------------------------------------------------------------------------------
     def new_channel(self):
         name = input('Channel Name: ')
@@ -333,3 +340,68 @@ class Video:
                     pass
                 elif x == '3':
                     self.video_list(1, None, channel_id)
+
+# follow channel by me
+    def followChannel(self):
+
+        channelId = input("which channel Id you wanna follow?")
+        chIds = []
+        sql = "SELECT channelId FROM `channel`"
+        self.cursor.execute(sql)
+        self.cursor.execute()
+        chId = self.cursor.fetchone()
+        while chId :
+            chIds.append(chId)
+            chId = self.cursor.fetchone()
+
+        if(channelId in chIds):
+            sql = "INSERT INTO `joinChannel` (`userId`, `channelId`) VALUES (%s, %s)"
+            self.cursor.execute(sql, (self.userId, channelId))
+
+# unfollow channel
+    def unfollowChannel(self):
+
+        channelId = input("which channel Id you wanna follow?")
+        chIds = []
+        sql = "SELECT channelId FROM `channel`"
+        self.cursor.execute(sql)
+        self.cursor.execute()
+        chId = self.cursor.fetchone()
+        while chId :
+            chIds.append(chId)
+            chId = self.cursor.fetchone()
+
+        if(channelId in chIds):
+            sql = "DELETE FROM `channel` WHERE `channelId`=%s"
+            self.cursor.execute(sql, (channelId))
+
+
+# search added by me
+    def search(self):
+        print("what are you searching for select :")
+        x = input('1: video name\n2: channel name \n3: play list\n')
+        name = input("Enter search word")
+        if x == 1:
+            sql = "SELECT * FROM `video` where `videoName` like %s%",name
+            self.cursor.execute(sql)
+            videoname = self.cursor.fetchone()
+            while videoname:
+                Print.print_success("video id : " + videoname[0]+ " video name: " + videoname[1])
+                videoname = self.cursor.fetchone()
+
+        if x == 2:
+            sql = "SELECT * FROM `channel` where `channelName` like %s%",name
+            self.cursor.execute(sql)
+            chname = self.cursor.fetchone()
+            while chname:
+                Print.print_success("channel id : " + chname[0]+ " channel name: " + chname[2])
+                chname = self.cursor.fetchone()
+
+        if x == 3:
+            sql = "SELECT * FROM `playlist` where `playlistName` like %s%",name
+            self.cursor.execute(sql)
+            pname = self.cursor.fetchone()
+            while pname:
+                Print.print_success("play list id : " + pname[0]+ " play list name: " + pname[2])
+                pname = self.cursor.fetchone()
+
