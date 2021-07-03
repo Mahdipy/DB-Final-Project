@@ -37,16 +37,15 @@ channel = """CREATE TABLE channel (
     channelName varchar(30) NOT NULL,
     date        varchar(30) NOT NULL,
     chCaption   text(50) NOT NULL,
-    PRIMARY KEY (channelId),
-    FOREIGN KEY (channelId )
-        REFERENCES video(commentId)
-        ON DELETE CASCADE
+    PRIMARY KEY (channelId)
 )"""
 
 shareChannel = """CREATE TABLE shareChannel(
      userId  int(15) NOT NULL,
      videoId int(15) NOT NULL,
-     channelId int(15) NOT NULL
+     channelId int(15) NOT NULL,
+     FOREIGN KEY (channelId) REFERENCES channel(channelId)
+    ON DELETE CASCADE
 )"""
 
 view = """CREATE TABLE view(
