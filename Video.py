@@ -22,10 +22,10 @@ class Video:
                       'new playlist:       Create New PlayList\n'
                       'my playlist:       View User\'s PlayList\n'
                       'videos:             View Videos\n'
-                      'channels:           View Channels'
+                      'channels:           View Channels\n'
                       'new channel:        Create New Channel\n'
                       'upload:             Upload New Video\n'
-                      'search              Search'
+                      'search              Search\n'
                       'exit:               Exit\n'
                       '-----------------------------------------')
             elif line == 'new playlist':
