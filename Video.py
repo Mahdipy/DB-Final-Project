@@ -20,12 +20,12 @@ class Video:
                       '                Commands\n'
                       '-----------------------------------------\n'
                       'new playlist:       Create New PlayList\n'
-                      'my playlist:       View User\'s PlayList\n'
+                      'my playlist:        View User\'s PlayList\n'
                       'videos:             View Videos\n'
-                      'channels:           View Channels'
+                      'channels:           View Channels\n'
                       'new channel:        Create New Channel\n'
                       'upload:             Upload New Video\n'
-                      'search              Search'
+                      'search              Search\n'
                       'exit:               Exit\n'
                       '-----------------------------------------')
             elif line == 'new playlist':
@@ -398,27 +398,27 @@ class Video:
         x = input('1: video \n2: channel \n3: playlist\n')
         name = input("Enter search word: ")
         if x == '1':
-            sql = "SELECT * FROM `video` where `videoName` = `%%s%`"
+            sql = "SELECT * FROM `video` where `videoName` = %s"
             self.cursor.execute(sql, (name,))
             videoname = self.cursor.fetchone()
             while videoname:
-                Print.print_success("video id : " + videoname[0] + " video name: " + videoname[1])
+                Print.print_success(f'video id : {videoname[0]} video name : {videoname[1]}')
                 videoname = self.cursor.fetchone()
 
         if x == '2':
-            sql = "SELECT * FROM `channel` where `channelName` = `%%s%`"
+            sql = "SELECT * FROM `channel` where `channelName` = %s"
             self.cursor.execute(sql, (name))
             chname = self.cursor.fetchone()
             while chname:
-                Print.print_success("channel id : " + chname[0] + " channel name: " + chname[2])
+                Print.print_success(f"channel id : {chname[0]} channel name: {chname[2]}")
                 chname = self.cursor.fetchone()
 
         if x == '3':
-            sql = "SELECT * FROM `playlist` where `playlistName` = `%%s%`"
+            sql = "SELECT * FROM `playlist` where `playlistName` = %s"
             self.cursor.execute(sql, (name,))
             pname = self.cursor.fetchone()
             while pname:
-                Print.print_success("play list id : " + pname[0] + " play list name: " + pname[2])
+                Print.print_success(f"play list id : { pname[0]}  play list name: { pname[2]}")
                 pname = self.cursor.fetchone()
 
 
